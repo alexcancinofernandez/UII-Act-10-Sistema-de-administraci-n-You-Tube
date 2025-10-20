@@ -1,0 +1,104 @@
+{% extends "app_video_youtube/base.html" %}
+{% block body %}
+<h3 class="m-4">Todos los Videos</h3>
+<div class="row">
+  <div class="col-12">
+    {% if videos %}
+      <div class="card bg-light ms-4 me-4 mb-4">
+        <div class="card-header"><i class="fa-solid fa-list"></i> Lista de Videos</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID Video</th>
+                  <th>ID Canal</th>
+                  <th>Título</th>
+                  <th>Fecha de Subida</th>
+                  <th>Duración</th>
+                  <th>Vistas</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for video in videos %}
+                <tr>
+                  <td>{{ video.id_video }}</td>
+                  <td>{{ video.id_canal }}</td>
+                  <td>{{ video.titulo }}</td>
+                  <td>{{ video.fecha_subida }}</td>
+                  <td>{{ video.duracion }}</td>
+                  <td>{{ video.vistas }}</td>
+                  <td>
+                    <!-- Modal Ver -->
+                    <button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#myModal{{ video.id }}">
+                      <i class="fa-solid fa-circle-info"></i>
+                    </button>
+                    <div class="modal" id="myModal{{ video.id }}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Video: {{ video.titulo }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body">
+                            <ul class="list-unstyled">
+                              <li><strong>ID Video:</strong> {{ video.id_video }}</li>
+                              <li><strong>ID Canal:</strong> {{ video.id_canal }}</li>
+                              <li><strong>Título:</strong> {{ video.titulo }}</li>
+                              <li><strong>Fecha de Subida:</strong> {{ video.fecha_subida }}</li>
+                              <li><strong>Duración:</strong> {{ video.duracion }}</li>
+                              <li><strong>Vistas:</strong> {{ video.vistas }}</li>
+                            </ul>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Botón Editar -->
+                    <a class="btn btn-warning me-1" href="{% url 'edit_video' video.id %}">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+
+                    <!-- Modal Eliminar -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{ video.id }}">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <div class="modal" id="delete{{ video.id }}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Eliminar Video: {{ video.titulo }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>¿Estás seguro de que quieres eliminar este video?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <form action="{% url 'delete_video' video.id %}" method="POST">
+                              {% csrf_token %}
+                              <input type="submit" class="btn btn-primary" value="Eliminar">
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Fin Modal -->
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <h5 class="alert alert-primary ms-4 me-4">No hay videos registrados</h5>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
